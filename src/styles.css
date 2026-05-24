@@ -1,0 +1,44 @@
+/* @partyvelope/react-block-cms — standalone compiled stylesheet
+ * 소비자: import "@partyvelope/react-block-cms/styles.css";
+ * 색상 테마는 :root에서 --cms-* CSS 변수로 덮어쓰기.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons&display=block");
+@import "tailwindcss";
+
+/* 라이브러리 컴포넌트의 클래스만 스캔 */
+@source "./**/*.{ts,tsx}";
+
+/* 테마 토큰 — 소비자는 --cms-* 로 덮어씀 */
+@theme {
+  --color-primary: var(--cms-primary, #f97316);
+  --color-primary-dark: var(--cms-primary-dark, #ea580c);
+  --color-primary-surface: var(--cms-primary-surface, #fff7ed);
+  --color-primary-light: var(--cms-primary-light, #ffedd5);
+  --color-primary-300: var(--cms-primary-300, #fdba74);
+}
+
+/* Material 아이콘 베이스 (utilities로 크기 덮어쓰기 가능하도록 base 레이어) */
+@layer base {
+  .material-symbols-outlined,
+  .material-icons {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: middle;
+  }
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+  }
+  .material-icons {
+    font-family: "Material Icons";
+  }
+}

@@ -1,0 +1,41 @@
+/* @partyvelope/react-block-cms — Tailwind v4 사용자용 테마/베이스
+ * 소비자 globals.css 에서:
+ *   @import "tailwindcss";
+ *   @import "@partyvelope/react-block-cms/theme.css";
+ *   @source "../node_modules/@partyvelope/react-block-cms/dist";
+ * 색상은 :root 에서 --cms-* 로 덮어쓰기.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons&display=block");
+
+@theme {
+  --color-primary: var(--cms-primary, #f97316);
+  --color-primary-dark: var(--cms-primary-dark, #ea580c);
+  --color-primary-surface: var(--cms-primary-surface, #fff7ed);
+  --color-primary-light: var(--cms-primary-light, #ffedd5);
+  --color-primary-300: var(--cms-primary-300, #fdba74);
+}
+
+@layer base {
+  .material-symbols-outlined,
+  .material-icons {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: middle;
+  }
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+  }
+  .material-icons {
+    font-family: "Material Icons";
+  }
+}

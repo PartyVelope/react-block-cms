@@ -1,0 +1,503 @@
+/**
+ * 블록 CMS — 타입/스키마 단일 소스.
+ * 서버 컴포넌트(렌더러)와 클라이언트(admin 폼) 양쪽에서 import 한다.
+ * "use client" 금지 · 서버 전용 import 금지 (순수 타입 + 데이터만).
+ *
+ * 백엔드 src/modules/content/block-types.ts 의 BLOCK_TYPES 와 동일하게 유지할 것.
+ */
+
+export type ButtonStyle = "primary" | "outline";
+export interface CmsButton {
+  label: string;
+  href: string;
+  style: ButtonStyle;
+  /** material symbol 이름 (선택). 라벨 뒤/앞에 표시 */
+  icon?: string;
+}
+
+export interface HeroData {
+  eyebrow?: string;
+  breadcrumb?: string;
+  badge?: string;
+  /** 제목 본문 (plain, 줄바꿈=Enter). 레거시 HTML도 그대로 렌더 */
+  title: string;
+  /** 제목 강조(주황색) 줄 — 본문 아래 새 줄로 표시 */
+  titleAccent?: string;
+  /** 부제 (plain, 줄바꿈=Enter) */
+  subtitle?: string;
+  /** 부제 아래 보조 문단 */
+  subtitle2?: string;
+  bg: { type: "color" | "image"; value: string };
+  /** 그라데이션(이미지 없는) 히어로 뒤에 깔리는 흐린 배경 이미지 (선택) */
+  bgImage?: string;
+  /** 어두운 배경(흰 글씨) / 밝은 배경(검은 글씨) */
+  theme?: "dark" | "light";
+  tags?: string[];
+  buttons: CmsButton[];
+}
+
+export interface RichTextData {
+  eyebrow?: string;
+  heading?: string;
+  /** 신뢰된 admin 입력. 렌더 시 dangerouslySetInnerHTML 로 출력 */
+  html: string;
+}
+
+export interface CardItem {
+  icon: string; // material symbol name (variant=icon일 때)
+  num?: string; // 번호 배지 (variant=number일 때)
+  title: string;
+  desc: string;
+  href?: string;
+}
+export interface CardGridData {
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  columns: 2 | 3 | 4;
+  /** icon=아이콘 원형, number=사각 번호, number-lg=큰 번호, icon-num=아이콘+번호(왼쪽) */
+  variant?: "icon" | "number" | "number-lg" | "icon-num";
+  /** 섹션 배경 (기본 neutral) */
+  bg?: "white" | "neutral";
+  cards: CardItem[];
+}
+
+/**
+ * 좌(텍스트+인용구) / 우(패널) 2단.
+ * 우측 패널: panelItems 있으면 체크리스트, 없으면 panelText 하이라이트 카드.
+ */
+export interface TextPanelData {
+  eyebrow?: string;
+  heading: string;
+  /** 제목 강조(주황색) 줄 */
+  headingAccent?: string;
+  paragraphs: string[];
+  /** 강조 인용구 박스(좌측 하단). 비우면 표시 안 함 */
+  quote?: string;
+  /** 섹션 배경: white(기본) | surface(연한 강조) */
+  bg?: "white" | "surface";
+  panelTitle: string;
+  /** 체크리스트 모드 */
+  panelItems?: string[];
+  /** 하이라이트 카드 모드 */
+  panelIcon?: string;
+  panelText?: string;
+  /** 하이라이트 카드 색조 (기본 primary, warning=빨강 경고) */
+  panelTone?: "primary" | "warning";
+}
+
+/** 가운데 정렬 강조 밴드 + 배지 칩 */
+export interface CalloutData {
+  eyebrow?: string;
+  heading: string;
+  /** 제목 강조(주황색) 줄 */
+  headingAccent?: string;
+  text?: string;
+  badges?: string[];
+  theme?: "surface" | "dark";
+}
+
+/** 표 */
+export interface TableData {
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  /** 섹션 배경 (기본 white) */
+  bg?: "white" | "neutral";
+  /** 밀집 표(작은 글씨) */
+  dense?: boolean;
+  headers: string[];
+  rows: string[][];
+}
+
+/** 제목+불릿 리스트 패널 카드들 (이력/안내 등) */
+export interface CardListItem {
+  num?: string;
+  title: string;
+  subtitle?: string;
+  items: string[];
+}
+export interface CardListData {
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  columns: 2 | 3;
+  /** 섹션 배경 (기본 white). neutral이면 카드가 흰색으로 대비 */
+  bg?: "white" | "neutral";
+  cards: CardListItem[];
+}
+
+export interface TwoColumnData {
+  eyebrow?: string;
+  heading: string;
+  paragraphs: string[];
+  image: { src: string; alt: string };
+  imageSide: "left" | "right";
+  /** 체크리스트(아이콘) */
+  list?: string[];
+  /** 배지 칩(이력 등). list와 별개 */
+  badges?: string[];
+  /** 이미지 위 떠있는 카드(예: Director / 이기홍 원장) */
+  imageCaption?: { label?: string; title?: string };
+  /** 이미지 뒤 흐림 장식 */
+  blob?: boolean;
+  /** 텍스트 측 하단 박스(제목+불릿 리스트+링크). home 원장 이력 등 */
+  listCard?: {
+    title: string;
+    items: string[];
+    link?: { label: string; href: string };
+  };
+  buttons?: CmsButton[];
+}
+
+/** 전폭 임의 HTML 섹션 (bespoke 레이아웃용. admin 신뢰 입력) */
+export interface RawHtmlData {
+  bg?: "white" | "neutral" | "surface";
+  html: string;
+}
+
+/* ── info-columns: 진료시간·병원정보·지도 등 2단 정보 섹션 (비개발자 편집용) ── */
+export interface InfoRow {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}
+export interface InfoLine {
+  icon?: string;
+  text: string;
+  href?: string;
+}
+export interface InfoBtn {
+  label: string;
+  href: string;
+  primary?: boolean;
+}
+export interface InfoNote {
+  icon?: string;
+  title?: string;
+  text: string;
+}
+/** 한 컬럼(패널). kind에 따라 표시 */
+export interface InfoPanel {
+  kind: "card" | "text" | "map";
+  // 공통 / card
+  title?: string;
+  icon?: string;
+  rows?: InfoRow[]; // 진료시간 행
+  lines?: InfoLine[]; // 주소·전화 등 아이콘+텍스트 줄
+  note?: InfoNote; // 박스 안내(주차 등)
+  buttons?: InfoBtn[];
+  // text
+  eyebrow?: string;
+  heading?: string;
+  paragraphs?: string[];
+  // map
+  addressLines?: string[];
+  sub?: string;
+  links?: InfoBtn[];
+}
+export interface InfoColumnsData {
+  eyebrow?: string;
+  heading?: string;
+  bg?: "white" | "neutral";
+  left: InfoPanel;
+  right: InfoPanel;
+}
+
+/** 우하단 고정 플로팅 버튼 (home 등) */
+export interface FloatingToolbarData {
+  items: { icon: string; href: string; label: string; primary?: boolean }[];
+}
+
+export interface ProcessStep {
+  num: string;
+  title: string;
+  desc: string;
+}
+export interface ProcessStepsData {
+  eyebrow?: string;
+  heading: string;
+  intro?: string;
+  steps: ProcessStep[];
+}
+
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+export interface FaqData {
+  eyebrow?: string;
+  heading?: string;
+  items: FaqItem[];
+}
+
+export interface CtaData {
+  heading: string;
+  text?: string;
+  buttons: CmsButton[];
+  theme: "dark" | "light";
+}
+
+export type BlockType =
+  | "hero"
+  | "rich-text"
+  | "card-grid"
+  | "two-column"
+  | "process-steps"
+  | "faq"
+  | "cta"
+  | "text-panel"
+  | "callout"
+  | "table"
+  | "card-list"
+  | "raw-html"
+  | "floating-toolbar"
+  | "info-columns";
+
+export interface BlockDataMap {
+  hero: HeroData;
+  "rich-text": RichTextData;
+  "card-grid": CardGridData;
+  "two-column": TwoColumnData;
+  "process-steps": ProcessStepsData;
+  faq: FaqData;
+  cta: CtaData;
+  "text-panel": TextPanelData;
+  callout: CalloutData;
+  table: TableData;
+  "card-list": CardListData;
+  "raw-html": RawHtmlData;
+  "floating-toolbar": FloatingToolbarData;
+  "info-columns": InfoColumnsData;
+}
+
+/** 공개/편집 공통 블록. visible 은 admin 편집 시에만 의미. */
+export interface CmsBlock<T extends BlockType = BlockType> {
+  id: string;
+  type: T;
+  data: BlockDataMap[T];
+  order?: number;
+  visible?: boolean;
+}
+
+export interface PageSeo {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+export interface CmsPage {
+  slug: string;
+  displayName: string;
+  theme: { seo?: PageSeo } & Record<string, unknown>;
+  blocks: CmsBlock[];
+}
+
+/** admin "블록 추가" 메뉴 메타 + 기본값 */
+export const BLOCK_REGISTRY: ReadonlyArray<{
+  type: BlockType;
+  label: string;
+  icon: string;
+}> = [
+  { type: "hero", label: "히어로 (상단 배너)", icon: "wallpaper" },
+  { type: "rich-text", label: "제목 + 본문", icon: "article" },
+  { type: "card-grid", label: "카드 그리드", icon: "grid_view" },
+  { type: "two-column", label: "이미지 + 텍스트", icon: "view_column" },
+  { type: "process-steps", label: "단계 안내", icon: "format_list_numbered" },
+  { type: "faq", label: "FAQ 아코디언", icon: "quiz" },
+  { type: "cta", label: "강조 배너 (CTA)", icon: "campaign" },
+  { type: "text-panel", label: "텍스트 + 체크리스트 패널", icon: "vertical_split" },
+  { type: "callout", label: "강조 밴드 (가운데)", icon: "ad_units" },
+  { type: "table", label: "표", icon: "table" },
+  { type: "card-list", label: "리스트 카드", icon: "list_alt" },
+  { type: "raw-html", label: "임의 HTML 섹션", icon: "code" },
+  { type: "floating-toolbar", label: "플로팅 버튼", icon: "contact_support" },
+  { type: "info-columns", label: "정보 2단 (시간·지도·연락처)", icon: "view_column" },
+];
+
+export const BLOCK_LABEL: Record<BlockType, string> = Object.fromEntries(
+  BLOCK_REGISTRY.map((b) => [b.type, b.label]),
+) as Record<BlockType, string>;
+
+/** 새 블록 추가 시 기본 데이터 */
+export function createDefaultBlockData(type: BlockType): BlockDataMap[BlockType] {
+  switch (type) {
+    case "hero":
+      return {
+        eyebrow: "",
+        title: "제목을 입력하세요",
+        subtitle: "",
+        bg: { type: "color", value: "#171717" },
+        buttons: [],
+      } satisfies HeroData;
+    case "rich-text":
+      return {
+        eyebrow: "",
+        heading: "소제목",
+        html: "<p>본문 내용을 입력하세요.</p>",
+      } satisfies RichTextData;
+    case "card-grid":
+      return {
+        eyebrow: "",
+        heading: "",
+        intro: "",
+        columns: 3,
+        cards: [{ icon: "check_circle", title: "카드 제목", desc: "설명" }],
+      } satisfies CardGridData;
+    case "two-column":
+      return {
+        eyebrow: "",
+        heading: "제목",
+        paragraphs: ["문단 내용을 입력하세요."],
+        image: { src: "/images/doctor.jpg", alt: "" },
+        imageSide: "left",
+        list: [],
+        buttons: [],
+      } satisfies TwoColumnData;
+    case "process-steps":
+      return {
+        eyebrow: "",
+        heading: "진행 단계",
+        intro: "",
+        steps: [{ num: "01", title: "단계 제목", desc: "설명" }],
+      } satisfies ProcessStepsData;
+    case "faq":
+      return {
+        eyebrow: "",
+        heading: "자주 묻는 질문",
+        items: [{ q: "질문", a: "답변" }],
+      } satisfies FaqData;
+    case "cta":
+      return {
+        heading: "지금 문의하세요",
+        text: "",
+        buttons: [{ label: "전화 문의", href: "tel:031-767-0075", style: "primary" }],
+        theme: "dark",
+      } satisfies CtaData;
+    case "text-panel":
+      return {
+        eyebrow: "",
+        heading: "제목",
+        paragraphs: ["문단 내용을 입력하세요."],
+        quote: "",
+        panelTitle: "패널 제목",
+        panelItems: ["항목 1", "항목 2"],
+      } satisfies TextPanelData;
+    case "callout":
+      return {
+        eyebrow: "",
+        heading: "강조 문구",
+        text: "",
+        badges: [],
+        theme: "surface",
+      } satisfies CalloutData;
+    case "table":
+      return {
+        eyebrow: "",
+        heading: "표 제목",
+        intro: "",
+        headers: ["구분", "설명"],
+        rows: [["항목", "내용"]],
+      } satisfies TableData;
+    case "card-list":
+      return {
+        eyebrow: "",
+        heading: "",
+        intro: "",
+        columns: 2,
+        cards: [{ title: "카드 제목", items: ["항목 1", "항목 2"] }],
+      } satisfies CardListData;
+    case "raw-html":
+      return {
+        bg: "white",
+        html: "<div class=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">내용</div>",
+      } satisfies RawHtmlData;
+    case "floating-toolbar":
+      return {
+        items: [
+          { icon: "call", href: "tel:031-767-0075", label: "전화" },
+        ],
+      } satisfies FloatingToolbarData;
+    case "info-columns":
+      return {
+        eyebrow: "",
+        heading: "",
+        bg: "white",
+        left: {
+          kind: "card",
+          title: "진료시간",
+          icon: "schedule",
+          rows: [
+            { label: "평일 (월-금)", value: "09:00 - 20:00" },
+            { label: "일요일", value: "휴진", highlight: true },
+          ],
+        },
+        right: {
+          kind: "map",
+          title: "톡바른경희한의원 본점",
+          addressLines: ["경기도 광주시 파발로 187", "세양빌딩 2층"],
+          links: [],
+        },
+      } satisfies InfoColumnsData;
+  }
+}
+
+/* ── 비개발자용 텍스트 ↔ HTML 변환 (제목/부제에서 태그를 숨김) ─────────── */
+
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/**
+ * 렌더용 HTML 생성.
+ * - accent가 정의돼 있으면(신규 모델): 본문(줄바꿈→<br>) + 강조 줄(주황 span)
+ * - accent 없고 본문에 태그가 있으면: 레거시 HTML 그대로
+ * - 그 외: plain 본문 줄바꿈→<br>
+ */
+export function fieldToHtml(text?: string, accent?: string): string {
+  const t = text ?? "";
+  if (accent === undefined) {
+    if (/<[a-z!/]/i.test(t)) return t; // 레거시 HTML
+    return escapeHtml(t).replace(/\n/g, "<br />");
+  }
+  let html = escapeHtml(t).replace(/\n/g, "<br />");
+  if (accent) {
+    html += `<br /><span class="text-primary">${escapeHtml(accent)}</span>`;
+  }
+  return html;
+}
+
+/** 폼 표시용: 저장된 값(plain 또는 레거시 HTML)을 {본문, 강조}로 분해 */
+export function htmlToFields(
+  text?: string,
+  accent?: string,
+): { text: string; accent: string } {
+  if (accent !== undefined) return { text: text ?? "", accent };
+  const raw = text ?? "";
+  if (!/<[a-z!/]/i.test(raw)) return { text: raw, accent: "" };
+  // 레거시 HTML 분해
+  const am = raw.match(/<span[^>]*text-primary[^>]*>([\s\S]*?)<\/span>/i);
+  const acc = am ? am[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "";
+  let lead = raw.replace(/<span[^>]*text-primary[^>]*>[\s\S]*?<\/span>/i, "");
+  lead = lead
+    .replace(/<br\b[^>]*>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\n{2,}/g, "\n")
+    .replace(/[ \t]+\n/g, "\n")
+    .trim();
+  return { text: lead, accent: acc };
+}
+
+/* ── admin 에디터용 데이터 타입 (데이터 계층은 소비자가 콜백으로 연결) ── */
+export interface AdminBlock extends CmsBlock {
+  visible: boolean;
+}
+export interface AdminPage {
+  slug: string;
+  displayName: string;
+  theme: { seo?: PageSeo } & Record<string, unknown>;
+  blocks: AdminBlock[];
+}
+export interface SavePagePayload {
+  displayName?: string;
+  theme?: { seo?: PageSeo } & Record<string, unknown>;
+  blocks: { type: BlockType; data: unknown; visible: boolean }[];
+}
