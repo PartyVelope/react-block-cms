@@ -49,6 +49,8 @@ export interface CardItem {
   title: string;
   desc: string;
   href?: string;
+  /** 카드 설명 아래 불릿 리스트 (선택) */
+  items?: string[];
 }
 export interface CardGridData {
   eyebrow?: string;

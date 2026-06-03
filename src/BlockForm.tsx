@@ -46,12 +46,17 @@ function Field({
   textarea?: boolean;
   placeholder?: string;
 }) {
+  // 제목류 라벨(제목/소제목)은 줄바꿈(Enter)을 위해 자동으로 여러 줄 입력으로.
+  // 단, "제목 강조" 줄·"제목 아이콘" 등 보조 한 줄 필드는 제외.
+  const isTitle = /제목|소제목/.test(label) && !/강조|아이콘/.test(label);
+  const multiline = textarea || isTitle;
   return (
     <label className="block">
       <span className="block text-xs font-bold text-neutral-600 mb-1">{label}</span>
-      {textarea ? (
+      {multiline ? (
         <textarea
-          className={`${inputCls} min-h-[90px] font-mono`}
+          className={`${inputCls} ${textarea ? "min-h-[90px] font-mono" : "min-h-[2.5rem]"}`}
+          rows={textarea ? undefined : 2}
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
@@ -455,6 +460,13 @@ export default function BlockForm({
                   )}
                   <Field label="제목" value={c.title} onChange={(x) => update({ ...c, title: x })} />
                   <Field label="설명" value={c.desc} textarea onChange={(x) => update({ ...c, desc: x })} />
+                  <Repeat<string>
+                    label="목록 항목 (선택)"
+                    items={c.items ?? []}
+                    makeNew={() => ""}
+                    onChange={(items) => update({ ...c, items })}
+                    render={(it, up) => <Field label="" value={it} onChange={up} />}
+                  />
                   {v === "icon" && (
                     <Field label="링크 (선택)" value={c.href ?? ""} onChange={(x) => update({ ...c, href: x })} />
                   )}

@@ -1,13 +1,27 @@
 {
   "name": "@partyvelope/react-block-cms",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "블록 기반 콘텐츠 CMS — SSR/SEO 안전한 렌더러 + 실시간 미리보기 admin 에디터 (데이터 계층 무관, React).",
-  "keywords": ["cms", "react", "blocks", "page-builder", "ssr", "nextjs", "tailwind", "editor"],
+  "keywords": [
+    "cms",
+    "react",
+    "blocks",
+    "page-builder",
+    "ssr",
+    "nextjs",
+    "tailwind",
+    "editor"
+  ],
   "license": "MIT",
   "author": "partyvelope",
   "type": "module",
-  "sideEffects": ["*.css"],
-  "files": ["dist", "src/theme.css"],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "src/theme.css"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -45,5 +59,13 @@
     "tailwindcss": "^4.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PartyVelope/react-block-cms.git"
+  },
+  "homepage": "https://github.com/PartyVelope/react-block-cms#readme",
+  "bugs": {
+    "url": "https://github.com/PartyVelope/react-block-cms/issues"
   }
 }
